@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
-public class MyRecursiveTask extends RecursiveTask<Integer> {
+public class MyRecursiveTask extends RecursiveTask<Long> {
     private static int minPartLength;
     private int[] data;
 
@@ -24,11 +24,19 @@ public class MyRecursiveTask extends RecursiveTask<Integer> {
     }
 
     @Override
-    protected Integer compute() {
+    protected Long compute() {
         if (data.length > minPartLength){
-            return ForkJoinTask.invokeAll(createChildTasks()).stream().mapToInt(x -> x.compute()).sum();
+            return ForkJoinTask.invokeAll(createChildTasks()).stream().mapToLong(x -> x.compute()).sum();
         } else
-            return Arrays.stream(data).sum();
+            return sumSimpleCalc(data);
 
+    }
+
+    private long sumSimpleCalc(int[] data){
+        long sum = 0;
+        for (int i = 0; i < data.length; i++) {
+            sum += data[i];
+        }
+        return sum;
     }
 }
